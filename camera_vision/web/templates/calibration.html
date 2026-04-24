@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}Calibration{% endblock %}
+{% block content %}
+<section class="stack" aria-labelledby="cal-heading">
+  <h1 id="cal-heading">Calibration</h1>
+  <p>Point a ChArUco board at each camera, capture varied poses, then finalise.</p>
+  <label class="field">
+    <span>Your name (recorded in calibration file)</span>
+    <input type="text" id="user-name" autocomplete="name" placeholder="e.g. Connor">
+  </label>
+</section>
+
+<section class="stack" aria-labelledby="intrinsics-heading">
+  <h2 id="intrinsics-heading">Intrinsics</h2>
+  <div class="split">
+    {% for side in ['left', 'right'] %}
+    <article class="stack" data-side="{{ side }}">
+      <h3>{{ side|capitalize }} camera</h3>
+      <img class="stream" src="{{ url_for('calibration_stream_charuco', side=side) }}"
+           alt="Live feed from {{ side }} camera with ChArUco overlay">
+      <div class="row">
+        <button type="button" data-intrinsics-capture="{{ side }}">Capture pose</button>
+        <button type="button" data-intrinsics-finalise="{{ side }}">Finalise</button>
+        <button type="button" class="ghost" data-intrinsics-reset="{{ side }}">Reset</button>
+      </div>
+      <p class="status" data-intrinsics-status="{{ side }}" aria-live="polite">
+        {% if side == 'left' %}
+          {% set f = state.intrinsics_left %}
+        {% else %}
+          {% set f = state.intrinsics_right %}
+        {% endif %}
+        {% if f.exists %}Existing calibration: {{ f.captured_at }} by {{ f.user }}.{% else %}Not calibrated.{% endif %}
+      </p>
+    </article>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="stack" aria-labelledby="extrinsics-heading">
+  <h2 id="extrinsics-heading">Extrinsics (stereo)</h2>
+  <p>
+    {% if state.intrinsics_ready %}
+      Both intrinsics are ready. Capture simultaneous pairs of the board.
+    {% else %}
+      <span class="badge badge--warn">blocked</span> Both intrinsics must be calibrated first.
+    {% endif %}
+  </p>
+  <div class="row">
+    <button type="button" id="extrinsics-capture" {% if not state.intrinsics_ready %}disabled{% endif %}>Capture pair</button>
+    <button type="button" id="extrinsics-finalise" {% if not state.intrinsics_ready %}disabled{% endif %}>Finalise</button>
+    <button type="button" class="ghost" id="extrinsics-reset" {% if not state.intrinsics_ready %}disabled{% endif %}>Reset</button>
+  </div>
+  <p class="status" id="extrinsics-status" aria-live="polite">
+    {% if state.extrinsics.exists %}Existing: {{ state.extrinsics.captured_at }} by {{ state.extrinsics.user }}.{% else %}Not calibrated.{% endif %}
+  </p>
+</section>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='calibration.js') }}"></script>
+{% endblock %}

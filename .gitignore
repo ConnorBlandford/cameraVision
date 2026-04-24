@@ -1,0 +1,34 @@
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+*.egg-info/
+build/
+dist/
+
+# Data artefacts — keep directory structure, ignore contents
+data/scan_images/*
+!data/scan_images/.gitkeep
+data/detection_annotation/*
+!data/detection_annotation/.gitkeep
+data/target_annotation/*
+!data/target_annotation/.gitkeep
+data/calibrations/*
+!data/calibrations/.gitkeep
+data/manifest.json
+
+# Model weights
+*.pth
+*.onnx
+models/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+.DS_Store

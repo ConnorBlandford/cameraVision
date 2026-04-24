@@ -1,0 +1,40 @@
+server:
+  host: 127.0.0.1
+  port: 5050
+  debug: false
+
+camera:
+  # Options: "webcam" (single cam, duplicated as left+right), "stereo_uvc" (two UVC devices)
+  source: webcam
+  webcam:
+    device_index: 0
+    width: 1280
+    height: 720
+  stereo_uvc:
+    left_index: 0
+    right_index: 1
+    width: 1920
+    height: 1080
+
+calibration:
+  board:
+    # ChArUco board parameters
+    squares_x: 7
+    squares_y: 5
+    square_length_m: 0.035
+    marker_length_m: 0.026
+    dictionary: DICT_5X5_100
+  min_captures: 15
+
+detection:
+  model_size: nano  # nano | small | medium | large — rfdetr Apache-2.0 sizes only
+  default_confidence: 0.5
+  # Auto-preselect detections at/above this; user can override in UI
+  selection_delta: 0.15
+
+paths:
+  scan_images: data/scan_images
+  detection_annotation: data/detection_annotation
+  target_annotation: data/target_annotation
+  calibrations: data/calibrations
+  manifest: data/manifest.json

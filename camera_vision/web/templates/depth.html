@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Depth scanning{% endblock %}
+{% block content %}
+<section class="stack" aria-labelledby="depth-heading">
+  <h1 id="depth-heading">Depth scanning</h1>
+  <p class="callout">Coming soon. This service will produce disparity and depth maps from the stereo pair.</p>
+  <p>
+    Prerequisite:
+    {% if state.extrinsics.exists %}
+      <span class="badge badge--ok">extrinsics ready</span>
+    {% else %}
+      <span class="badge badge--warn">extrinsics missing</span> —
+      <a href="{{ url_for('calibration') }}">calibrate first</a>.
+    {% endif %}
+  </p>
+</section>
+{% endblock %}

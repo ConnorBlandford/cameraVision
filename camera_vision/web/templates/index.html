@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}Camera Vision — Home{% endblock %}
+{% block content %}
+<section class="stack" aria-labelledby="status-heading">
+  <h1 id="status-heading">System status</h1>
+  <dl class="status-grid">
+    <dt>Camera source</dt>
+    <dd>{{ camera.source }} {% if not camera.is_stereo %}<span class="badge badge--warn">single (dev)</span>{% endif %}</dd>
+
+    <dt>Intrinsics — left</dt>
+    <dd>
+      {% if state.intrinsics_left.exists %}
+        <span class="badge badge--ok">ready</span>
+        <small>{{ state.intrinsics_left.captured_at or 'unknown time' }} — {{ state.intrinsics_left.user or 'unknown user' }}{% if state.intrinsics_left.rms is not none %} (RMS {{ '%.3f'|format(state.intrinsics_left.rms) }}){% endif %}</small>
+      {% else %}
+        <span class="badge badge--warn">not calibrated</span>
+      {% endif %}
+    </dd>
+
+    <dt>Intrinsics — right</dt>
+    <dd>
+      {% if state.intrinsics_right.exists %}
+        <span class="badge badge--ok">ready</span>
+        <small>{{ state.intrinsics_right.captured_at or 'unknown time' }} — {{ state.intrinsics_right.user or 'unknown user' }}{% if state.intrinsics_right.rms is not none %} (RMS {{ '%.3f'|format(state.intrinsics_right.rms) }}){% endif %}</small>
+      {% else %}
+        <span class="badge badge--warn">not calibrated</span>
+      {% endif %}
+    </dd>
+
+    <dt>Extrinsics</dt>
+    <dd>
+      {% if state.extrinsics.exists %}
+        <span class="badge badge--ok">ready</span>
+        <small>{{ state.extrinsics.captured_at or 'unknown time' }} — {{ state.extrinsics.user or 'unknown user' }}{% if state.extrinsics.rms is not none %} (RMS {{ '%.3f'|format(state.extrinsics.rms) }}){% endif %}</small>
+      {% else %}
+        <span class="badge badge--warn">not calibrated</span>
+      {% endif %}
+    </dd>
+  </dl>
+</section>
+
+<section class="stack" aria-labelledby="services-heading">
+  <h2 id="services-heading">Services</h2>
+  <ul class="card-grid">
+    <li class="card">
+      <h3><a href="{{ url_for('calibration') }}">Calibration</a></h3>
+      <p>Intrinsics and extrinsics workflows with metadata persisted to YAML.</p>
+    </li>
+    <li class="card">
+      <h3><a href="{{ url_for('detection') }}">Target detection</a></h3>
+      <p>Run a detection round — scan, detect, pick targets. Manifest persisted to JSON.</p>
+    </li>
+    <li class="card">
+      <h3><a href="{{ url_for('depth') }}">Depth scanning</a></h3>
+      <p>Requires extrinsics. Stub for now.</p>
+    </li>
+  </ul>
+</section>
+{% endblock %}

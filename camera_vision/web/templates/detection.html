@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block title %}Target detection{% endblock %}
+{% block content %}
+<section class="stack" aria-labelledby="det-heading">
+  <h1 id="det-heading">Target detection</h1>
+
+  <form class="stack" id="new-round-form" aria-label="Start a new detection round">
+    <div class="row">
+      <label class="field">
+        <span>Target type</span>
+        <input list="target-options" id="target-type" name="target_type" required autocomplete="off">
+        <datalist id="target-options">
+          <option value="Apples">
+          <option value="Corks">
+          <option value="Other">
+        </datalist>
+      </label>
+      <label class="field">
+        <span>Confidence threshold</span>
+        <input type="number" id="confidence" min="0" max="1" step="0.05" value="{{ default_confidence }}">
+      </label>
+      <button type="submit">Start round</button>
+    </div>
+    <p class="status" id="new-round-status" aria-live="polite"></p>
+  </form>
+
+  <section class="stack" id="round-workflow" hidden aria-labelledby="round-workflow-heading">
+    <h2 id="round-workflow-heading">Round in progress</h2>
+    <p id="round-meta"></p>
+    <div class="row">
+      <button type="button" id="btn-scan">1. Scan</button>
+      <button type="button" id="btn-detect" disabled>2. Detect</button>
+      <button type="button" id="btn-confirm" disabled>4. Confirm targets</button>
+      <button type="button" class="ghost" id="btn-cancel">Cancel round</button>
+    </div>
+    <div id="unsupported-warning" class="callout callout--warn" hidden role="note">
+      This target type is not in the detector's known classes. Results will show all detections in the scene.
+    </div>
+    <div class="detection-viewer" id="detection-viewer" hidden>
+      <h3>3. Pick targets</h3>
+      <p>Tap/click a detection to toggle selected / not selected. Auto-preselection uses a higher threshold than detection.</p>
+      <div class="detection-canvas-wrap">
+        <img id="detection-image" alt="Annotated detection image">
+        <div id="detection-overlay" aria-hidden="true"></div>
+      </div>
+      <ul id="detection-list" aria-label="Detections"></ul>
+    </div>
+    <div id="round-result" hidden></div>
+  </section>
+
+  <section class="stack" aria-labelledby="history-heading">
+    <h2 id="history-heading">Recent rounds</h2>
+    {% if rounds %}
+    <table class="rounds">
+      <thead><tr><th>Started</th><th>Target</th><th>Status</th><th>Raw</th><th>Detection</th><th>Target</th></tr></thead>
+      <tbody>
+        {% for r in rounds[:20] %}
+        <tr>
+          <td><time>{{ r.started_at }}</time></td>
+          <td>{{ r.target_type }}{% if not r.class_filter_applied %} <span class="badge badge--warn">no filter</span>{% endif %}</td>
+          <td>{{ r.status.value }}</td>
+          <td>{% if r.raw_path %}<a href="/{{ r.raw_path|replace('\\', '/') }}">view</a>{% endif %}</td>
+          <td>{% if r.detection_path %}<a href="/{{ r.detection_path|replace('\\', '/') }}">view</a>{% endif %}</td>
+          <td>{% if r.target_path %}<a href="/{{ r.target_path|replace('\\', '/') }}">view</a>{% endif %}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <p>No rounds recorded yet.</p>
+    {% endif %}
+  </section>
+</section>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='detection.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en" data-theme="system">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Camera Vision{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script>
+      // Inline so theme is applied before first paint (prevents flash).
+      (function() {
+        var t = localStorage.getItem('cv-theme') || 'system';
+        document.documentElement.setAttribute('data-theme', t);
+      })();
+    </script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="app-header" role="banner">
+    <div class="app-header__row">
+      <a class="app-title" href="{{ url_for('index') }}">Camera Vision</a>
+      <nav aria-label="Primary">
+        <a href="{{ url_for('calibration') }}">Calibration</a>
+        <a href="{{ url_for('detection') }}">Detection</a>
+        <a href="{{ url_for('depth') }}">Depth</a>
+      </nav>
+      <div class="theme-toggle" role="group" aria-label="Theme">
+        <button type="button" data-theme-set="system" aria-pressed="false">System</button>
+        <button type="button" data-theme-set="light"  aria-pressed="false">Light</button>
+        <button type="button" data-theme-set="dark"   aria-pressed="false">Dark</button>
+      </div>
+    </div>
+  </header>
+  <main id="main" role="main">
+    {% block content %}{% endblock %}
+  </main>
+  <script src="{{ url_for('static', filename='app.js') }}"></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>
