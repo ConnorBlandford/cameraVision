@@ -5,24 +5,24 @@ server:
 
 camera:
   # Options: "webcam" (single cam, duplicated as left+right), "stereo_uvc" (two UVC devices)
-  source: webcam
+  source: stereo_uvc
   webcam:
     device_index: 0
     width: 1280
     height: 720
   stereo_uvc:
-    left_index: 0
-    right_index: 1
+    left_index: 1
+    right_index: 2
     width: 1920
     height: 1080
 
 calibration:
   board:
     # ChArUco board parameters
-    squares_x: 7
-    squares_y: 5
-    square_length_m: 0.035
-    marker_length_m: 0.026
+    squares_x: 11
+    squares_y: 8
+    square_length_m: 0.015
+    marker_length_m: 0.011
     dictionary: DICT_5X5_100
   min_captures: 15
 
