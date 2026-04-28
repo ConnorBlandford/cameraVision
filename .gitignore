@@ -14,12 +14,20 @@ dist/
 # Data artefacts — keep directory structure, ignore contents
 data/scan_images/*
 !data/scan_images/.gitkeep
+data/scan_images_right/*
+!data/scan_images_right/.gitkeep
 data/detection_annotation/*
 !data/detection_annotation/.gitkeep
 data/target_annotation/*
 !data/target_annotation/.gitkeep
 data/calibrations/*
 !data/calibrations/.gitkeep
+data/depth_scan/*
+!data/depth_scan/.gitkeep
+data/depth_detection/*
+!data/depth_detection/.gitkeep
+data/depth_target/*
+!data/depth_target/.gitkeep
 data/manifest.json
 
 # Model weights
